@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import java.text.DateFormat
+//import kotlinx.parcelize.Parcelize
 
 @Entity(tableName = "task_table")
 @Parcelize

@@ -18,7 +18,7 @@ class AddEditTasksViewModel @AssistedInject constructor(
     @Assisted private val state: SavedStateHandle
 ): ViewModel() {
 
-    val task = state.get<Task>("task")
+    val task = state.get<Task>("taskKey")
     var taskName = state.get<String>("taskName") ?: task?.name ?: ""
         set(value) {
             field = value
