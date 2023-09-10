@@ -60,6 +60,10 @@ dependencies {
     implementation("com.google.dagger:hilt-android:2.44")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
 
+//    implementation("com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2")
+//    kapt("com.squareup.inject:assisted-inject-processor-dagger2:0.5.2")
+
+
     // Room
     val room_version = "2.5.2"
     implementation("androidx.room:room-runtime:$room_version")

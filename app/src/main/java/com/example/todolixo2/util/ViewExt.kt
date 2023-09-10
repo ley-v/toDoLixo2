@@ -1,4 +1,4 @@
-package com.example.todolixo2
+package com.example.todolixo2.util
 
 import android.util.Log
 import android.view.View

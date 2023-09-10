@@ -13,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,17 +21,22 @@ import com.example.todolixo2.R
 import com.example.todolixo2.data.SortOrder
 import com.example.todolixo2.data.Task
 import com.example.todolixo2.databinding.FragmentTasksBinding
-import com.example.todolixo2.onQueryTextChanged
+import com.example.todolixo2.ui.TasksViewModelFactory
+import com.example.todolixo2.util.onQueryTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListenerTA {
 
-    private val viewModel: TasksViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: TasksViewModelFactory
+    private val viewModel by viewModels<TasksViewModel> { viewModelFactory }
+
+//    private val viewModel: TasksViewModel by viewModels()
     private lateinit var binding: FragmentTasksBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -65,6 +71,10 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                     viewModel.onTaskSwiped(task)
                 }
             }).attachToRecyclerView(rvTask)
+
+            fabAddTask.setOnClickListener {
+                viewModel.onAddNewTaskClick()
+            }
         }
 
         viewModel.tasks.observe(viewLifecycleOwner, object : Observer<List<Task>?> {
@@ -82,6 +92,20 @@ class TasksFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClic
                                 .setAction("UNDO") {
                                     viewModel.onUndoDeleteClick(event.task)
                                 }.show()
+                        }
+
+                        is TasksViewModel.TasksEvent.NavigateToAddTaskScreen -> {
+                            val action =
+                                TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment()
+                            findNavController().navigate(action)
+                        }
+
+                        is TasksViewModel.TasksEvent.NavigateToEditTaskScreen -> {
+                            val action =
+                                TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
+                                    event.task
+                                )
+                            findNavController().navigate(action)
                         }
                     }
 
